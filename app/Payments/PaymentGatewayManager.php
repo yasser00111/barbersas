@@ -27,6 +27,7 @@ class PaymentGatewayManager
 
         return match ($config['driver'] ?? $name) {
             'midtrans' => new MidtransGateway($config),
+            'duitku' => new DuitkuGateway($config),
             'fake' => new FakeGateway(),
             'manual' => new ManualGateway(),
             default => throw new InvalidArgumentException("Unsupported payment gateway driver [{$name}]."),

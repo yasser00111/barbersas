@@ -35,6 +35,9 @@ class SettingController extends Controller
                 'midtrans_client_key' => PlatformConfig::get('midtrans_client_key'),
                 'midtrans_merchant_id' => PlatformConfig::get('midtrans_merchant_id'),
                 'midtrans_is_production' => (bool) PlatformConfig::get('midtrans_is_production', config('barbersaas.payment.gateways.midtrans.is_production')),
+                'duitku_merchant_code' => PlatformConfig::get('duitku_merchant_code'),
+                'duitku_api_key_set' => (bool) PlatformConfig::get('duitku_api_key'),
+                'duitku_is_production' => (bool) PlatformConfig::get('duitku_is_production', config('barbersaas.payment.gateways.duitku.is_production')),
                 'grace_period_days' => (int) PlatformConfig::get('grace_period_days', config('barbersaas.subscription.grace_days')),
             ],
             'gateways' => array_keys(config('barbersaas.payment.gateways', [])),
@@ -51,11 +54,14 @@ class SettingController extends Controller
             'smtp_encryption' => ['nullable', 'in:tls,ssl,starttls'],
             'mail_from_address' => ['nullable', 'email', 'max:255'],
             'mail_from_name' => ['nullable', 'string', 'max:255'],
-            'payment_gateway' => ['required', 'string', 'in:manual,midtrans,fake'],
+            'payment_gateway' => ['required', 'string', 'in:manual,midtrans,duitku,fake'],
             'midtrans_server_key' => ['nullable', 'string', 'max:255'],
             'midtrans_client_key' => ['nullable', 'string', 'max:255'],
             'midtrans_merchant_id' => ['nullable', 'string', 'max:255'],
             'midtrans_is_production' => ['boolean'],
+            'duitku_merchant_code' => ['nullable', 'string', 'max:255'],
+            'duitku_api_key' => ['nullable', 'string', 'max:255'],
+            'duitku_is_production' => ['boolean'],
             'grace_period_days' => ['nullable', 'integer', 'min:0', 'max:90'],
         ]);
 
@@ -64,7 +70,7 @@ class SettingController extends Controller
                 continue;
             }
 
-            $encrypted = in_array($key, ['smtp_password', 'midtrans_server_key'], true);
+            $encrypted = in_array($key, ['smtp_password', 'midtrans_server_key', 'duitku_api_key'], true);
             PlatformConfig::set($key, $value, $encrypted);
         }
 

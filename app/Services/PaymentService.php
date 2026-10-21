@@ -154,7 +154,7 @@ class PaymentService
         DB::transaction(function () use ($invoice, $session, $gateway) {
             Payment::withoutTenantScope()
                 ->where('invoice_id', $invoice->getKey())
-                ->where('method', PaymentMethod::Midtrans)
+                ->whereIn('method', [PaymentMethod::Midtrans, PaymentMethod::Duitku])
                 ->where('status', PaymentStatus::Pending)
                 ->update(['status' => PaymentStatus::Expired]);
 
@@ -164,10 +164,15 @@ class PaymentService
                 ->where('provider_reference', $session->reference)
                 ->first();
 
+            $method = match ($gateway->name()) {
+                'duitku' => PaymentMethod::Duitku,
+                default => PaymentMethod::Midtrans,
+            };
+
             $attributes = [
                 'invoice_id' => $invoice->getKey(),
                 'tenant_id' => $invoice->tenant_id,
-                'method' => PaymentMethod::Midtrans,
+                'method' => $method,
                 'provider' => $gateway->name(),
                 'provider_reference' => $session->reference,
                 'amount' => $invoice->amount,
@@ -325,10 +330,15 @@ class PaymentService
             ->where('provider_reference', $webhook->orderId)
             ->first();
 
+        $method = match ($webhook->provider) {
+            'duitku' => PaymentMethod::Duitku,
+            default => PaymentMethod::Midtrans,
+        };
+
         $attributes = [
             'invoice_id' => $invoice->getKey(),
             'tenant_id' => $invoice->tenant_id,
-            'method' => PaymentMethod::Midtrans,
+            'method' => $method,
             'provider' => $webhook->provider,
             'provider_reference' => $webhook->externalId ?: $webhook->orderId,
             'amount' => $webhook->amount ?: $invoice->amount,

@@ -45,6 +45,13 @@ return [
                 'snap_base_url' => env('MIDTRANS_SNAP_BASE_URL'),
                 'sanitize' => (bool) env('MIDTRANS_SANITIZE', false),
             ],
+            'duitku' => [
+                'driver' => 'duitku',
+                'merchant_code' => env('DUITKU_MERCHANT_CODE', ''),
+                'api_key' => env('DUITKU_API_KEY', ''),
+                'is_production' => (bool) env('DUITKU_IS_PRODUCTION', false),
+                'expiry_period' => (int) env('DUITKU_EXPIRY_PERIOD', 1440),
+            ],
         ],
     ],
 

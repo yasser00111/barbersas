@@ -57,5 +57,15 @@ class PlatformConfigurator
                 'barbersaas.payment.gateways.midtrans.is_production' => (bool) PlatformConfig::get('midtrans_is_production', false),
             ]);
         }
+
+        $duitkuApiKey = PlatformConfig::get('duitku_api_key');
+
+        if ($duitkuApiKey || PlatformConfig::get('duitku_merchant_code')) {
+            config([
+                'barbersaas.payment.gateways.duitku.merchant_code' => PlatformConfig::get('duitku_merchant_code', ''),
+                'barbersaas.payment.gateways.duitku.api_key' => $duitkuApiKey,
+                'barbersaas.payment.gateways.duitku.is_production' => (bool) PlatformConfig::get('duitku_is_production', false),
+            ]);
+        }
     }
 }
