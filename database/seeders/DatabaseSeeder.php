@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SubscriptionPlanSeeder::class,
             PlatformSettingSeeder::class,
+            SuperAdminSeeder::class,
         ]);
 
         if (app()->environment('local', 'development')) {
